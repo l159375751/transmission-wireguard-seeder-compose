@@ -1,0 +1,21 @@
+# Environment files with credentials
+.env
+
+# Download directories
+downloads/
+watch/
+
+# Docker volumes (if using local bind mounts)
+gluetun-data/
+transmission-config/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
