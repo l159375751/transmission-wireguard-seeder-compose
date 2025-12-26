@@ -1,12 +1,13 @@
 # Transmission WireGuard Seeder
 
-Secure BitTorrent seeding setup using Transmission with WireGuard VPN integration via Gluetun. All Transmission traffic is routed through the VPN for privacy and security.
+Secure BitTorrent seeding setup using [Transmission](https://transmissionbt.com/) with WireGuard VPN integration via [Gluetun](https://github.com/qdm12/gluetun). All Transmission traffic is routed through the VPN for privacy and security.
 
 ## Features
 
-- Transmission BitTorrent client with web UI
-- WireGuard VPN integration using Gluetun
+- [Transmission](https://transmissionbt.com/) BitTorrent client with web UI
+- WireGuard VPN integration using [Gluetun](https://github.com/qdm12/gluetun)
 - All torrent traffic routed through VPN
+- Port forwarding support (if supported by your VPN provider)
 - Automatic VPN reconnection
 - Health checks for VPN connectivity
 - Two deployment options: Docker Compose and standalone containers
