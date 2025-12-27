@@ -44,6 +44,10 @@ mkdir -p "$WATCH_PATH"
 # Create podman volume if it doesn't exist
 podman volume create transmission-config 2>/dev/null || true
 
+echo "Building custom Transmission image..."
+podman build -t transmission-wg:latest .
+
+echo
 echo "Starting Transmission container attached to wg-netns namespace..."
 echo
 
@@ -53,11 +57,11 @@ podman run -d \
     -e PUID="$PUID" \
     -e PGID="$PGID" \
     -e TZ="$TZ" \
-    -v transmission-config:/config \
+    -v transmission-data:/data \
     -v "$(realpath "$DOWNLOADS_PATH")":/downloads \
     -v "$(realpath "$WATCH_PATH")":/watch \
     --restart unless-stopped \
-    docker.io/linuxserver/transmission:latest
+    localhost/transmission-wg:latest
 
 echo
 echo "========================================"

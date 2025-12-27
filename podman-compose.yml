@@ -6,7 +6,10 @@ version: "3.8"
 
 services:
   transmission:
-    image: docker.io/linuxserver/transmission:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: transmission-wg:latest
     container_name: transmission
     # Attach to the wg-netns namespace created on the host
     network_mode: "ns:/run/netns/transmission-vpn"
@@ -15,10 +18,10 @@ services:
       - PGID=${PGID:-1000}
       - TZ=${TZ:-UTC}
     volumes:
-      - transmission-config:/config
+      - transmission-data:/data
       - ${DOWNLOADS_PATH}:/downloads
       - ${WATCH_PATH}:/watch
     restart: unless-stopped
 
 volumes:
-  transmission-config:
+  transmission-data:

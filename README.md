@@ -8,6 +8,7 @@ Secure BitTorrent seeding setup using [Transmission](https://transmissionbt.com/
 - WireGuard VPN using [wg-netns](https://github.com/dadevel/wg-netns) (lightweight Python script)
 - All torrent traffic routed through VPN with guaranteed no-leak isolation
 - Podman container integration (native network namespace support)
+- Custom Alpine-based image with tcpdump and wireguard-tools for debugging
 - Minimal resource overhead - no VPN container needed
 - Systemd service support for auto-start on boot
 - Port forwarding support (if supported by your VPN provider)
@@ -87,7 +88,21 @@ DOWNLOADS_PATH=/path/to/downloads
 WATCH_PATH=/path/to/watch
 ```
 
-### 3. Setup WireGuard Namespace
+### 3. Build Custom Transmission Image
+
+Build the custom Transmission image:
+
+```bash
+podman build -t transmission-wg:latest .
+```
+
+This creates a custom Alpine-based image with:
+- `transmission-daemon` and `transmission-remote`
+- `tcpdump`
+- `wireguard-tools`
+- `curl`, `iputils`, `bind-tools`
+
+### 4. Setup WireGuard Namespace
 
 Run the setup script to create the WireGuard configuration and start the namespace:
 
@@ -100,7 +115,7 @@ This script will:
 - Start the `transmission-vpn` network namespace
 - Verify the VPN connection
 
-### 4. Start Transmission
+### 5. Start Transmission
 
 **Option A: Using Podman Compose**
 
@@ -114,7 +129,9 @@ podman-compose up -d
 ./podman-run.sh
 ```
 
-### 5. Setup Port Forwarding (Access Web UI)
+Note: The `podman-run.sh` script automatically builds the image if needed.
+
+### 6. Setup Port Forwarding (Access Web UI)
 
 Since Transmission is running inside a network namespace, you need to forward ports to access the web UI:
 
@@ -124,7 +141,7 @@ sudo socat TCP-LISTEN:9091,fork,reuseaddr EXEC:'ip netns exec transmission-vpn s
 
 Keep this running in a separate terminal, or run it in the background.
 
-### 6. Access Transmission Web UI
+### 7. Access Transmission Web UI
 
 Navigate to: **http://localhost:9091**
 
