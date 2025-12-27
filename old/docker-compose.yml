@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   gluetun:
-    image: qmcgaw/gluetun:latest
+    image: docker.io/qmcgaw/gluetun:latest
     container_name: gluetun
     cap_add:
       - NET_ADMIN
@@ -16,29 +16,34 @@ services:
       # VPN Provider Configuration
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
+      - WIREGUARD_ALLOWED_IPS=0.0.0.0/0
+      - HEALTH_TARGET_ADDRESS=1.1.1.1:443
+      - HEALTH_RESTART_VPN=off
+      - LOG_LEVEL=debug
 
       # WireGuard Configuration (from .env file)
-      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
-      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY:-}
-      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
-      - WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
-      - WIREGUARD_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT:-51820}
+      #- WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      #- WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+      ## - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY:-}
+      #- WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      #- WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
+      #- WIREGUARD_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT:-51820}
 
       # Timezone
       - TZ=${TZ:-UTC}
     volumes:
       - gluetun-data:/gluetun
+      - ./wgtest.conf:/gluetun/wireguard/wg0.conf:ro
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "https://api.ipify.org"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    #healthcheck:
+    #  test: ["CMD", "wget", "--spider", "-q", "https://api.ipify.org"]
+    #  interval: 60s
+    #  timeout: 10s
+    #  retries: 3
+    #  start_period: 10s
 
   transmission:
-    image: linuxserver/transmission:latest
+    image: docker.io/linuxserver/transmission:latest
     container_name: transmission
     network_mode: "service:gluetun"  # Route all traffic through Gluetun VPN
     environment:

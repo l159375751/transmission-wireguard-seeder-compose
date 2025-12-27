@@ -1,0 +1,21 @@
+{
+  "name": "transmission-vpn",
+  "managed": true,
+  "dns-server": [],
+  "interfaces": [
+    {
+      "name": "wg0",
+      "address": ["${WIREGUARD_ADDRESS}"],
+      "private-key": "${WIREGUARD_PRIVATE_KEY}",
+      "peers": [
+        {
+          "public-key": "${WIREGUARD_PUBLIC_KEY}",
+          "preshared-key": "${WIREGUARD_PRESHARED_KEY}",
+          "endpoint": "${WIREGUARD_ENDPOINT}",
+          "persistent-keepalive": 25,
+          "allowed-ips": ["0.0.0.0/0", "::/0"]
+        }
+      ]
+    }
+  ]
+}

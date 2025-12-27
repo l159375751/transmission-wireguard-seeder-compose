@@ -1,6 +1,10 @@
 # Environment files with credentials
 .env
 
+# WireGuard configuration files (may contain credentials)
+torguard.*
+*.conf
+
 # Download directories
 downloads/
 watch/
